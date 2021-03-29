@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import {
   atom,
   RecoilRoot,
-  // selector,
+  selector,
   useRecoilState,
-  // useRecoilValue,
+  useRecoilValue,
 } from 'recoil';
 
 const usernameState = atom({
   key: 'username',
-  default: 'Red',
+  default: 'Black Power',
+});
+
+const countState = selector({
+  key: 'count',
+  get: ({ get }) => {
+    const username = get(usernameState);
+    return username.length;
+  },
 });
 
 function App() {
@@ -23,13 +31,20 @@ function App() {
 }
 
 function Nav() {
-  return <div className='nav'></div>;
+  const username = useRecoilValue(usernameState);
+
+  return (
+    <div className='nav'>
+      <h3>{username}</h3>
+    </div>
+  );
 }
 
 function Body() {
   return (
     <div className='body'>
       <Profile />
+      <Count />
     </div>
   );
 }
@@ -45,6 +60,16 @@ function Profile() {
         value={username}
         onChange={(event) => setUsername(event.target.value)}
       />
+    </div>
+  );
+}
+
+function Count() {
+  const count = useRecoilValue(countState);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
     </div>
   );
 }
